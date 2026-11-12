@@ -41,15 +41,56 @@
     a:hover {
       border-bottom-color: #1a1a1a;
     }
+    .lang {
+      font-size: 0.95rem;
+      color: #bbb;
+    }
+    .lang button {
+      font: inherit;
+      color: #bbb;
+      background: none;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+    }
+    .lang button:hover,
+    .lang button[aria-pressed="true"] {
+      color: #1a1a1a;
+    }
   </style>
 </head>
 <body>
+  <div class="lang">
+    <button type="button" data-set="en" aria-pressed="true">en</button> /
+    <button type="button" data-set="id" aria-pressed="false">id</button>
+  </div>
+
   <h1>himyar kamaka</h1>
 
   <img src="headshot.jpg" alt="Himyar Kamaka Portrait">
 
-  <p>economics + mathematics undergraduate at uchicago with interests in development economics.</p>
+  <p data-en="economics + mathematics undergraduate at uchicago with interests in development economics."
+     data-id="mahasiswa double major ekonomi + matematika di uchicago dengan minat pada ekonomi pembangunan.">economics + mathematics undergraduate at uchicago with interests in development economics.</p>
 
-  <p>contact: <a href="mailto:himyar@uchicago.edu">himyar@uchicago.edu</a></p>
+  <p><a href="https://www.linkedin.com/in/himyarkamaka" target="_blank" rel="noopener"
+     data-en="more on linkedin"
+     data-id="selengkapnya di linkedin">more on linkedin</a></p>
+
+  <script>
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-' + lang + ']').forEach(function (el) {
+        el.textContent = el.getAttribute('data-' + lang);
+      });
+      document.querySelectorAll('.lang button').forEach(function (b) {
+        b.setAttribute('aria-pressed', b.dataset.set === lang);
+      });
+      try { localStorage.setItem('lang', lang); } catch (e) {}
+    }
+    document.querySelectorAll('.lang button').forEach(function (b) {
+      b.addEventListener('click', function () { setLang(b.dataset.set); });
+    });
+    try { if (localStorage.getItem('lang') === 'id') setLang('id'); } catch (e) {}
+  </script>
 </body>
 </html>
